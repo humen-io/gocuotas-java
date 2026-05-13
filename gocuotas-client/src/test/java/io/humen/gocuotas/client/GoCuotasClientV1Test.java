@@ -31,7 +31,7 @@ class GoCuotasClientV1Test {
                         return;
                     }
                     var json =
-                            "{\"id\":3851003,\"name\":\"Humen delicias\",\"cuit\":\"20340931530\","
+                            "{\"id\":1000001,\"name\":\"Comercio de ejemplo S.R.L.\",\"cuit\":\"20987654321\","
                                     + "\"surcharge_percentage_to_online_orders\":\"0.0\","
                                     + "\"max_number_of_installments\":3}";
                     var bytes = json.getBytes(StandardCharsets.UTF_8);
@@ -48,9 +48,9 @@ class GoCuotasClientV1Test {
             var client = new GoCuotasClientV1(config, HttpClient.newHttpClient(), new ObjectMapper(), () -> "api-key-x");
             var info = client.obtenerInformacionComercio();
             assertEquals("Bearer api-key-x", auth.get());
-            assertEquals(3851003L, info.getId());
-            assertEquals("Humen delicias", info.getName());
-            assertEquals("20340931530", info.getCuit());
+            assertEquals(1000001L, info.getId());
+            assertEquals("Comercio de ejemplo S.R.L.", info.getName());
+            assertEquals("20987654321", info.getCuit());
             assertEquals("0.0", info.getSurchargePercentageToOnlineOrders());
             assertEquals(3, info.getMaxNumberOfInstallments());
         } finally {
@@ -67,7 +67,7 @@ class GoCuotasClientV1Test {
                 exchange -> {
                     auth.set(exchange.getRequestHeaders().getFirst("Authorization"));
                     var json =
-                            "[{\"id\":1453328,\"payment_expense_method\":\"transferencia\","
+                            "[{\"id\":9001001,\"payment_expense_method\":\"transferencia\","
                                     + "\"payment_expense_at\":\"2026-05-12\",\"due_expense_at\":\"2026-05-12\","
                                     + "\"payment_expense_retained_amount_in_cents\":0,"
                                     + "\"payment_expense_amount_in_cents\":2274953}]";
@@ -87,7 +87,7 @@ class GoCuotasClientV1Test {
             assertEquals("Bearer k1", auth.get());
             assertEquals(1, list.size());
             var l = list.get(0);
-            assertEquals(1453328L, l.getId());
+            assertEquals(9001001L, l.getId());
             assertEquals("transferencia", l.getPaymentExpenseMethod());
             assertEquals("2026-05-12", l.getPaymentExpenseAt());
             assertEquals("2026-05-12", l.getDueExpenseAt());
@@ -102,7 +102,7 @@ class GoCuotasClientV1Test {
     void obtenerInformacionLiquidacion_parsesDetailBody() throws Exception {
         var server = HttpServer.create(new InetSocketAddress(0), 0);
         var json =
-                "{\"id\":1453328,\"payment_expense_method\":\"transferencia\","
+                "{\"id\":9001001,\"payment_expense_method\":\"transferencia\","
                         + "\"payment_expense_at\":\"2026-05-12\",\"due_expense_at\":\"2026-05-12\","
                         + "\"payment_expense_retained_amount_in_cents\":0,\"payment_expense_amount_in_cents\":2274953,"
                         + "\"details\":[{\"id\":99,\"description\":\"Pedido\",\"delivered_at\":\"2026-05-01\","
@@ -112,7 +112,7 @@ class GoCuotasClientV1Test {
                         + "\"payment\":{\"card\":{\"number\":\"406651******6008\",\"name\":\"Visa\"}}}],"
                         + "\"normal_retention_retain_paid_orders\":[{}],\"tax_retention_retain_paid_orders\":[]}";
         server.createContext(
-                "/api_client/v1/expense_settlements/1453328",
+                "/api_client/v1/expense_settlements/9001001",
                 exchange -> {
                     var bytes = json.getBytes(StandardCharsets.UTF_8);
                     exchange.getResponseHeaders().add("Content-Type", "application/json");
@@ -126,8 +126,8 @@ class GoCuotasClientV1Test {
             var base = URI.create("http://127.0.0.1:" + server.getAddress().getPort());
             var config = new GoCuotasClientV1Config(base, Duration.ofSeconds(5));
             var client = new GoCuotasClientV1(config, HttpClient.newHttpClient(), new ObjectMapper(), () -> "k1");
-            var info = client.obtenerInformacionLiquidacion("1453328");
-            assertEquals(1453328L, info.getId());
+            var info = client.obtenerInformacionLiquidacion("9001001");
+            assertEquals(9001001L, info.getId());
             assertEquals("transferencia", info.getPaymentExpenseMethod());
             assertEquals(1, info.getDetails().size());
             var d = info.getDetails().get(0);
@@ -146,7 +146,7 @@ class GoCuotasClientV1Test {
         var server = HttpServer.create(new InetSocketAddress(0), 0);
         var csv =
                 "ID,Método de Pago,Fecha de Pago,Fecha de Vencimiento,Monto Retenido,Monto Total\n"
-                        + "1453328,transferencia,12/05/2026,12/05/2026,0.0,22749.53\n";
+                        + "9001001,transferencia,12/05/2026,12/05/2026,0.0,22749.53\n";
         server.createContext(
                 "/api_client/v1/expense_settlements_csvs",
                 exchange -> {
@@ -166,7 +166,7 @@ class GoCuotasClientV1Test {
             var body = client.obtenerInformacionLiquidacionesTextoPlano();
             assertEquals("text/plain", accept.get());
             assertTrue(body.contains("ID,Método de Pago"));
-            assertTrue(body.contains("1453328,transferencia"));
+            assertTrue(body.contains("9001001,transferencia"));
             assertTrue(body.contains("22749.53"));
         } finally {
             server.stop(0);
@@ -199,8 +199,8 @@ class GoCuotasClientV1Test {
             var base = URI.create("http://127.0.0.1:" + server.getAddress().getPort());
             var config = new GoCuotasClientV1Config(base, Duration.ofSeconds(5));
             var client = new GoCuotasClientV1(config, HttpClient.newHttpClient(), new ObjectMapper(), () -> "k1");
-            var body = client.obtenerLiquidacionTextoPlano("1453328");
-            assertTrue(pathSeen.get().endsWith("/api_client/v1/expense_settlements_csvs/1453328"));
+            var body = client.obtenerLiquidacionTextoPlano("9001001");
+            assertTrue(pathSeen.get().endsWith("/api_client/v1/expense_settlements_csvs/9001001"));
             assertEquals("text/plain", accept.get());
             assertTrue(body.contains("Descripcion,Fecha Origen"));
             assertTrue(body.contains("Ventas,30/01/2026"));

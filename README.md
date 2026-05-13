@@ -68,7 +68,7 @@ var checkout = CreateCheckoutRequest.builder()
     .amountInCents(150000)
     .email("comprador@example.com")
     .orderReferenceId("PEDIDO-123")
-    .phoneNumber("3515551234")
+    .phoneNumber("1144440000")
     .urlSuccess("https://mitienda.example/pago/ok")
     .urlFailure("https://mitienda.example/pago/error")
     .webhookUrl("https://mitienda.example/webhooks/gocuotas")
@@ -78,8 +78,8 @@ var response = client.createCheckout(checkout);
 String urlDePago = response.getUrlInit();
 
 var ordenes = client.listarOrdenes();
-var unaOrden = client.buscarOrden("14954290");
-var trasReembolso = client.reembolsarOrden("14954290");
+var unaOrden = client.buscarOrden("80001001");
+var trasReembolso = client.reembolsarOrden("80001001");
 ```
 
 ### Base URL personalizada (Redirect)
@@ -128,23 +128,23 @@ for (var liq : liquidaciones) {
     System.out.println(liq.getId() + " " + liq.getPaymentExpenseMethod() + " " + liq.getPaymentExpenseAmountInCents());
 }
 
-var detalle = client.obtenerInformacionLiquidacion("1453328");
+var detalle = client.obtenerInformacionLiquidacion("9001001");
 // o: client.obtenerInformacionLiquidacion(); // GOCUOTAS_COMMERCE_API_KEY + GOCUOTAS_LIQUIDACION_ID en entorno
 System.out.println(detalle.getDetails().get(0).getDescription());
 
 String csvLiquidaciones = client.obtenerInformacionLiquidacionesTextoPlano();
 System.out.print(csvLiquidaciones);
 
-String csvUnaLiquidacion = client.obtenerLiquidacionTextoPlano("1453328");
+String csvUnaLiquidacion = client.obtenerLiquidacionTextoPlano("9001001");
 // o: client.obtenerLiquidacionTextoPlano(); // GOCUOTAS_COMMERCE_API_KEY + GOCUOTAS_LIQUIDACION_ID
 System.out.print(csvUnaLiquidacion);
 
 // O con la clave explícita:
 // var comercio = client.obtenerInformacionComercio("tu_api_key_de_comercio");
 // var liquidaciones = client.listarLiquidaciones("tu_api_key_de_comercio");
-// var detalle = client.obtenerInformacionLiquidacion("tu_api_key", "1453328");
+// var detalle = client.obtenerInformacionLiquidacion("tu_api_key", "9001001");
 // var csv = client.obtenerInformacionLiquidacionesTextoPlano("tu_api_key");
-// var csvDet = client.obtenerLiquidacionTextoPlano("tu_api_key", "1453328");
+// var csvDet = client.obtenerLiquidacionTextoPlano("tu_api_key", "9001001");
 ```
 
 Equivalente con `curl` (reemplazá la clave):
@@ -160,9 +160,9 @@ Respuesta típica (JSON):
 
 ```json
 {
-  "id": 3851003,
-  "name": "Humen delicias",
-  "cuit": "20340931530",
+  "id": 1000001,
+  "name": "Comercio de ejemplo S.R.L.",
+  "cuit": "20987654321",
   "surcharge_percentage_to_online_orders": "0.0",
   "max_number_of_installments": 3
 }
@@ -184,7 +184,7 @@ Respuesta típica (array JSON):
 ```json
 [
   {
-    "id": 1453328,
+    "id": 9001001,
     "payment_expense_method": "transferencia",
     "payment_expense_at": "2026-05-12",
     "due_expense_at": "2026-05-12",
@@ -255,7 +255,7 @@ Respuesta típica (resumen):
 
 ```text
 ID,Método de Pago,Fecha de Pago,Fecha de Vencimiento,Monto Retenido,Monto Total
-1453328,transferencia,12/05/2026,12/05/2026,0.0,22749.53
+9001001,transferencia,12/05/2026,12/05/2026,0.0,22749.53
 ```
 
 En Java: `obtenerInformacionLiquidacionesTextoPlano()` o `obtenerInformacionLiquidacionesTextoPlano(String commerceApiKey)`.
@@ -266,7 +266,7 @@ Detalle ampliado en CSV (`Accept: text/plain`).
 
 ```bash
 curl --request GET \
-  --url https://www.gocuotas.com/api_client/v1/expense_settlements_csvs/1453328 \
+  --url https://www.gocuotas.com/api_client/v1/expense_settlements_csvs/9001001 \
   --header 'Accept: text/plain' \
   --header 'Authorization: Bearer GOCUOTAS_COMMERCE_API_KEY'
 ```
@@ -275,7 +275,7 @@ Respuesta típica (fragmento):
 
 ```text
 Descripcion,Fecha Origen,Fecha Pago,Número de Orden,Descripción,Comprobante,ApellidoNombre,Plan,Cuotas,Moneda,Importe,Comisiones,IVA sobre Comisiones,Retenciones (Impuestos),Total ventas,Total órdenes a retener,Total a cobrar,Sucursal ID,Sucursal Nombre,Sucursal Dirección,Referencia Externa,Fecha de Devolución
-Ventas,30/01/2026,12/05/2026,13121713,GOcuotas,13121713,Marianela Soto,0,3,pesos,23000.0,207.0,43.47,0.0,22749.53,-,22749.53,141224,Humen delicias,Pedro Mendoza 130,,-
+Ventas,30/01/2026,12/05/2026,80001002,GOcuotas,80001002,Cliente Ejemplo,0,3,pesos,23000.0,207.0,43.47,0.0,22749.53,-,22749.53,50001,Comercio de ejemplo S.R.L.,Calle Ficticia 1000,,-
 Totales,"","","","","","","","","",23000.0,207.0,43.47,0.0,22749.53,0.0,22749.53
 ```
 
@@ -302,7 +302,7 @@ Respuesta típica (fragmento):
 ```json
 [
   {
-    "id": 14954290,
+    "id": 80001001,
     "amount_in_cents": 1600000,
     "status": "approved",
     "delivered_at": "2026-04-18T12:55:17.368-03:00",
@@ -312,7 +312,7 @@ Respuesta típica (fragmento):
     "payment": {
       "card": {
         "number": "406651******6008",
-        "name": "Visa Débito Banco de Corrientes"
+        "name": "Visa Débito"
       }
     }
   }
@@ -322,8 +322,8 @@ Respuesta típica (fragmento):
 ### Redirect — buscar / reembolsar
 
 ```bash
-make buscar-orden GOCUOTAS_ORDER_ID=14954290
-make reembolsar-orden GOCUOTAS_ORDER_ID=14954290
+make buscar-orden GOCUOTAS_ORDER_ID=80001001
+make reembolsar-orden GOCUOTAS_ORDER_ID=80001001
 ```
 
 `curl` de referencia para detalle:
@@ -340,9 +340,9 @@ curl --request GET \
 ```bash
 make informacion-comercio GOCUOTAS_COMMERCE_API_KEY=tu_clave
 make listar-liquidaciones GOCUOTAS_COMMERCE_API_KEY=tu_clave
-make informacion-liquidacion GOCUOTAS_LIQUIDACION_ID=1453328 GOCUOTAS_COMMERCE_API_KEY=tu_clave
+make informacion-liquidacion GOCUOTAS_LIQUIDACION_ID=9001001 GOCUOTAS_COMMERCE_API_KEY=tu_clave
 make liquidaciones-texto-plano GOCUOTAS_COMMERCE_API_KEY=tu_clave
-make informacion-liquidacion-texto-plano GOCUOTAS_LIQUIDACION_ID=1453328 GOCUOTAS_COMMERCE_API_KEY=tu_clave
+make informacion-liquidacion-texto-plano GOCUOTAS_LIQUIDACION_ID=9001001 GOCUOTAS_COMMERCE_API_KEY=tu_clave
 ```
 
 ---

@@ -136,8 +136,8 @@ listar-ordenes:
 	fi
 
 # Detalle en vivo: authenticate (opcional) → GET .../orders/{id}
-# make buscar-orden GOCUOTAS_ORDER_ID=14954290
-# o: export GOCUOTAS_ORDER_ID=14954290 && make buscar-orden
+# make buscar-orden GOCUOTAS_ORDER_ID=80001001
+# o: export GOCUOTAS_ORDER_ID=80001001 && make buscar-orden
 buscar-orden:
 	@command -v jq >/dev/null 2>&1 || { echo "buscar-orden requiere jq." >&2; exit 1; }; \
 	base="$(GOCUOTAS_API_URL)"; base=$${base%/}; \
@@ -168,7 +168,7 @@ buscar-orden:
 	fi
 
 # Reembolso en vivo: authenticate (opcional) → DELETE .../orders/{id}
-# make reembolsar-orden GOCUOTAS_ORDER_ID=14954290
+# make reembolsar-orden GOCUOTAS_ORDER_ID=80001001
 reembolsar-orden:
 	@command -v jq >/dev/null 2>&1 || { echo "reembolsar-orden requiere jq." >&2; exit 1; }; \
 	base="$(GOCUOTAS_API_URL)"; base=$${base%/}; \
@@ -238,7 +238,7 @@ listar-liquidaciones:
 	fi
 
 # API Client V1: GET .../expense_settlements/{id}
-# make informacion-liquidacion GOCUOTAS_LIQUIDACION_ID=1453328 GOCUOTAS_COMMERCE_API_KEY=…
+# make informacion-liquidacion GOCUOTAS_LIQUIDACION_ID=9001001 GOCUOTAS_COMMERCE_API_KEY=…
 informacion-liquidacion:
 	@command -v jq >/dev/null 2>&1 || { echo "informacion-liquidacion requiere jq." >&2; exit 1; }; \
 	base="$(GOCUOTAS_API_URL)"; base=$${base%/}; \
@@ -278,7 +278,7 @@ liquidaciones-texto-plano:
 	fi
 
 # API Client V1: GET .../expense_settlements_csvs/{id} (text/plain, CSV detalle)
-# make informacion-liquidacion-texto-plano GOCUOTAS_LIQUIDACION_ID=1453328 GOCUOTAS_COMMERCE_API_KEY=…
+# make informacion-liquidacion-texto-plano GOCUOTAS_LIQUIDACION_ID=9001001 GOCUOTAS_COMMERCE_API_KEY=…
 informacion-liquidacion-texto-plano:
 	@base="$(GOCUOTAS_API_URL)"; base=$${base%/}; \
 	KEY="$(GOCUOTAS_COMMERCE_API_KEY)"; \
